@@ -9,7 +9,7 @@ public enum GameConfiguration {
     BASIC(10),
     ;
 
-    List<ShipType> shipsConfig = new ArrayList<ShipType>();
+    List<ShipType> shipsConfig = new ArrayList<>();
     int boardSize;
 
     GameConfiguration(int boardSize) {
