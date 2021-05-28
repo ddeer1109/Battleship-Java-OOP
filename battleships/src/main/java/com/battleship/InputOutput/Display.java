@@ -117,6 +117,13 @@ public class Display {
         newLine();
     }
 
+    public void shipOnField(Coordinates coordinates){
+        newLine();
+        tabulator();
+        System.out.println(String.format("incorrect input. Ship on coordinates: %s".toUpperCase(), coordinates));
+        newLine();
+    }
+
 
     public void askForCd() {
         tabulator();

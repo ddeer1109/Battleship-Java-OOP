@@ -46,10 +46,14 @@ public class Game {
         boolean coordinatesWithoutShipsNextTo = false;
 
         while (!coordinatesWithoutShipsNextTo || placingCoordinates.size() < shipLength) {
-            Coordinates[] input = player.getDoubleCd();
-            // TODO valid if first cd is not ship
-            Coordinates startPoint = input[0];
-            Coordinates endPoint = input[1];
+//          Coordinates[] input = player.getDoubleCd();
+
+            Coordinates startPoint = player.getSingleCd();
+            if (player.getPlayerBoard().isShipOnField(startPoint)) {
+                Battleship.INSTANCE.display.shipOnField(startPoint);
+                continue;
+            }
+            Coordinates endPoint = player.getSingleCd();;
 
             placingCoordinates = startPoint.getCoordinatesInRangeTo(endPoint, shipLength);
             if (placingCoordinates.size() == 0)
