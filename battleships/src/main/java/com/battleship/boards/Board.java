@@ -27,7 +27,7 @@ public class Board {
     }
 
     public void setShipPart(ShipPart part) {
-        this.fields[part.position.getX()][part.position.getY()] = part;
+        this.fields[part.getPosition().getX()][part.getPosition().getY()] = part;
     }
 
 

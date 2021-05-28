@@ -29,7 +29,7 @@ public class ShipPart extends Square {
     public String toString() {
         return "\n{ " + state +
                 " =='" + symbol + '\'' +
-                " ==" + position +
+                " ==" + getPosition() +
                 " }";
     }
 

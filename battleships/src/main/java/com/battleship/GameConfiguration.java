@@ -18,14 +18,14 @@ public enum GameConfiguration {
     }
 
     private void setBasicConfig() {
+        shipsConfig.add(ShipType.Carrier);
+        shipsConfig.add(ShipType.Cruiser);
         shipsConfig.add(ShipType.Battleship);
         shipsConfig.add(ShipType.Battleship);
         shipsConfig.add(ShipType.Submarine);
         shipsConfig.add(ShipType.Submarine);
         shipsConfig.add(ShipType.Destroyer);
         shipsConfig.add(ShipType.Carrier);
-        shipsConfig.add(ShipType.Carrier);
-        shipsConfig.add(ShipType.Cruiser);
         shipsConfig.add(ShipType.Cruiser);
         shipsConfig.add(ShipType.Cruiser);
     }

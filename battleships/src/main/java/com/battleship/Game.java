@@ -26,7 +26,7 @@ public class Game {
     }
     protected void servePlacingPhase() {
         placeShips(player1);
-//        placeShips(player2);
+        placeShips(player2);
     }
     private void placeShips(Player player){
         for (ShipType shipType : config.getShipsConfig()){
@@ -37,7 +37,7 @@ public class Game {
             List<Coordinates> placingCoordinates = getValidShipPlacement(player, shipType.getLength());
             Ship ship = new Ship(shipType, placingCoordinates);
             player.setShipOnBoard(ship);
-
+            // TODO Add ship to player's fleet
             Battleship.INSTANCE.display.placingInfo(ship.getParts());
         }
     }
@@ -47,6 +47,7 @@ public class Game {
 
         while (!coordinatesWithoutShipsNextTo || placingCoordinates.size() < shipLength) {
             Coordinates[] input = player.getDoubleCd();
+            // TODO valid if first cd is not ship
             Coordinates startPoint = input[0];
             Coordinates endPoint = input[1];
 

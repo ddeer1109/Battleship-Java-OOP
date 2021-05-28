@@ -18,7 +18,6 @@ public class Util {
         this.boardSize = boardSize;
         setLetterIndexesArray(boardSize);
         createCoordinatesDictionaries();
-
     }
     public static char[] getAlphabet() {
         return "abcdefghijklmnopqrstuvwxyz".toUpperCase().toCharArray();
@@ -26,7 +25,7 @@ public class Util {
 
 
 
-    void createCoordinatesDictionaries() {
+    private void createCoordinatesDictionaries() {
         for (int i = 0; i < letterIndexes.length; i++) {
             String s = String.valueOf(letterIndexes[i]);
             colsDictionary.put(s, i);
@@ -38,7 +37,7 @@ public class Util {
         }
     }
 
-    void setLetterIndexesArray (int size) {
+    private void setLetterIndexesArray (int size) {
         char[] alphabet = getAlphabet();
         letterIndexes = new char[size];
         for (int i = 0; i < size; i++) {

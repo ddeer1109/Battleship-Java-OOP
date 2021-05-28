@@ -6,7 +6,7 @@ public abstract class Square{
 
     protected String symbol = null;
     protected FieldState state;
-    public Coordinates position;
+    private Coordinates position;
     public Square(Coordinates coordinates) {
         position = coordinates;
     }
@@ -32,4 +32,7 @@ public abstract class Square{
         this.symbol = state.getSymbol();
     }
 
+    public Coordinates getPosition() {
+        return position;
+    }
 }

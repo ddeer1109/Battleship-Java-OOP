@@ -21,6 +21,11 @@ public class HumanPlayer extends Player{
     }
 
     @Override
+    public Coordinates[] getDoubleCd() {
+        return Battleship.INSTANCE.input.getHumanDoubleCd();
+    }
+
+    @Override
     public void setShipOnBoard(Ship ship) {
         super.setShipOnBoard(ship);
     }
@@ -43,11 +48,6 @@ public class HumanPlayer extends Player{
     @Override
     public List<Ship> getShips() {
         return super.getShips();
-    }
-
-    @Override
-    public Coordinates[] getDoubleCd() {
-        return Battleship.INSTANCE.input.getHumanDoubleCd();
     }
 
 }

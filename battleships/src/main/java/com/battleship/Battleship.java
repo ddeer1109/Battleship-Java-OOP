@@ -2,7 +2,6 @@ package com.battleship;
 
 import com.battleship.InputOutput.Display;
 import com.battleship.InputOutput.Input;
-import com.battleship.players.Player;
 import com.battleship.players.PlayerCreator;
 import com.battleship.util.Util;
 
@@ -15,7 +14,7 @@ public class Battleship {
     private Battleship() {
     }
 
-    protected void init() {
+    void init() {
         mainMenu();
 
         Util.INSTANCE.init(boardSize);

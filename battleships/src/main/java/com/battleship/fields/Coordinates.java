@@ -33,7 +33,6 @@ public class Coordinates {
         this.y = y;
     }
 
-
     private void setNextToCoordinates() {
         nextUp = x > 0? new Coordinates((getX()-1), getY()): null;
         nextRight = y < Util.INSTANCE.getBoardSize()-1 ? new Coordinates(getX(), (getY()+1)): null;
