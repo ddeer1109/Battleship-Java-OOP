@@ -31,6 +31,18 @@ public class Board {
     }
 
 
+    public boolean areNextToFieldsEmpty(List<Coordinates> placingCoordinates, boolean withoutInfo) {
+        for (Coordinates coordinates : placingCoordinates) {
+            for (Coordinates nextToCoordinates : coordinates.getNextFields()){
+                boolean notThisShipPart = !placingCoordinates.contains(nextToCoordinates);
+                boolean shipOnNextField = isShipOnField(nextToCoordinates);
+                if (notThisShipPart && shipOnNextField){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     public boolean areNextToFieldsEmpty(List<Coordinates> placingCoordinates) {
         for (Coordinates coordinates : placingCoordinates) {
             for (Coordinates nextToCoordinates : coordinates.getNextFields()){
@@ -54,4 +66,14 @@ public class Board {
     }
 
 
+    public Square[][] getFields() {
+        return fields;
+    }
+
+    public void setSunkShipFieldsState(List<ShipPart> sunkShipParts) {
+        for (ShipPart part : sunkShipParts) {
+            getObjectOnField(part.getPosition())
+                    .setState(FieldState.SUNK_SHIP);
+        }
+    }
 }

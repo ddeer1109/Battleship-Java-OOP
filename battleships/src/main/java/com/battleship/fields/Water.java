@@ -11,7 +11,7 @@ public class Water extends Square{
 
     @Override
     public String getSymbol() {
-        return super.getSymbol();
+        return this.symbol;
     }
 
     @Override

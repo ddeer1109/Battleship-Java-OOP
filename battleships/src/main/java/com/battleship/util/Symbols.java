@@ -1,7 +1,7 @@
 package com.battleship.util;
 
 public enum Symbols {
-    WATER("~"),
+    WATER(" "),
     HIT_PART("X"),
     SUNK_SHIP("#"),
     MISSED("M"),

@@ -1,7 +1,5 @@
 package com.battleship.players;
 
-import com.battleship.Battleship;
-
 public enum PlayerCreator {
     HUMAN(0),
     AI_EASY(1),
@@ -24,22 +22,22 @@ public enum PlayerCreator {
             case 0:
                 player = new HumanPlayer(nickname);
                 break;
-
             case 1:
                 player = new ComputerPlayerEasy(nickname);
                 break;
-//            case 2:
-//                player = new HumanPlayer(nickname);
-//                break;
-//            case 3:
-//                player = new HumanPlayer(nickname);
-//                break;
+            case 2:
+                player = new ComputerPlayerMedium(nickname);
+                break;
+            case 3:
+                player = new ComputerPlayerHard(nickname);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + playerType);
         }
     }
 
     public Player getPlayer() {
+        setPlayer();
         return player;
     }
 

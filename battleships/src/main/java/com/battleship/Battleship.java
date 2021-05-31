@@ -2,6 +2,7 @@ package com.battleship;
 
 import com.battleship.InputOutput.Display;
 import com.battleship.InputOutput.Input;
+import com.battleship.players.Player;
 import com.battleship.players.PlayerCreator;
 import com.battleship.util.Util;
 
@@ -21,13 +22,12 @@ public class Battleship {
         input = new Input();
         display = new Display();
         display.initWelcome();
+        input.pressEnterToContinue();
 
+        Player player1 = PlayerCreator.AI_HARD.getPlayer();
+        Player player2 = PlayerCreator.AI_EASY.getPlayer();
 
-        PlayerCreator player1 = PlayerCreator.HUMAN;
-        PlayerCreator player2 = PlayerCreator.AI_EASY;
-        player1.setPlayer(); player2.setPlayer();
-
-        Game.INSTANCE.init(boardSize, config, player1.getPlayer(), player2.getPlayer());
+        Game.INSTANCE.init(boardSize, config, player1, player2);
         Game.INSTANCE.servePlacingPhase();
         Game.INSTANCE.serveShootingPhase();
     }

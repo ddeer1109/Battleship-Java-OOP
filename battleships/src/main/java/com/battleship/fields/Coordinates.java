@@ -33,7 +33,7 @@ public class Coordinates {
         this.y = y;
     }
 
-    private void setNextToCoordinates() {
+    public void setNextToCoordinates() {
         nextUp = x > 0? new Coordinates((getX()-1), getY()): null;
         nextRight = y < Util.INSTANCE.getBoardSize()-1 ? new Coordinates(getX(), (getY()+1)): null;
         nextDown = x < Util.INSTANCE.getBoardSize()-1? new Coordinates((getX()+1), getY()): null;
@@ -52,8 +52,23 @@ public class Coordinates {
         return nextLeft;
     }
 
-    private Coordinates getNextUp() {
+    public Coordinates getNextUp() {
         return nextUp;
+    }
+
+
+    public List<Coordinates> getNextLeftRight(){
+        List<Coordinates> nextFields = new ArrayList<>();
+        nextFields.add(getNextLeft());
+        nextFields.add(getNextRight());
+        return nextFields;
+    }
+
+    public List<Coordinates> getNextTopBot(){
+        List<Coordinates> nextFields = new ArrayList<>();
+        nextFields.add(getNextUp());
+        nextFields.add(getNextDown());
+        return nextFields;
     }
 
 
@@ -119,12 +134,28 @@ public class Coordinates {
         return outOfRangeX || outOfRangeY;
     }
 
+    public boolean isXDirected(Coordinates another) {
+        return this.x == another.getX();
+    }
+    public boolean isYDirected(Coordinates another) {
+        return this.y == another.getY();
+    }
+    public boolean isInLineWith(Coordinates another) {
+        if (isXDirected(another)) {
+            return Math.abs(this.y - another.getY()) >= 1;
+        }else if (isYDirected(another)){
+            return Math.abs(this.x - another.getX()) >= 1;
+        } else if (isXDirected(another) && isYDirected(another));
+            return true;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Coordinates that = (Coordinates) o;
-        return x == that.x && y == that.y;
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof Coordinates)) return false;
+        Coordinates o = (Coordinates) obj;
+        return o.x == this.x && o.y == this.y;
     }
 
     @Override

@@ -4,24 +4,29 @@ import com.battleship.Battleship;
 import com.battleship.fields.Coordinates;
 import com.battleship.util.Util;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Input {
+    public Scanner sc = new Scanner(System.in);
     public Input() {
     }
     public String playerNickname(int num) {
         Battleship.INSTANCE.display.nicknameInput(num);
-        Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
         return input;
+    }
+
+    public void pressEnterToContinue(){
+        System.out.println("\n\nPress enter to continue ... ");
+        sc.nextLine();
     }
 
     public Coordinates getHumanSingleCd() {
 
         String[] cord = new String[2];
         do {
-            Scanner sc = new Scanner(System.in);
+//            Scanner sc = new Scanner(System.in);
             Battleship.INSTANCE.display.askForCd();
             String input = sc.nextLine().toUpperCase();
             try {
@@ -57,6 +62,11 @@ public class Input {
         Battleship.INSTANCE.display.outOfBoardInfo();
         return inRange;
     }
-
-
+    public boolean autoPlacementDecision(String name) {
+        Battleship.INSTANCE.display.autoPlacementDecision(name);
+        String input = sc.nextLine();
+        System.out.println("INput ["+input+"]");
+        boolean confirmed = input == "";
+        return confirmed;
+    }
 }

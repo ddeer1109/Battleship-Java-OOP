@@ -27,8 +27,8 @@ public abstract class Square{
         return state;
     }
 
-    public void setState(FieldState state) {
-        this.state = state;
+    public void setState(FieldState newState) {
+        state = newState;
         this.symbol = state.getSymbol();
     }
 

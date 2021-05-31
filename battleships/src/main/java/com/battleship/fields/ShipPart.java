@@ -22,15 +22,14 @@ public class ShipPart extends Square {
 
     @Override
     public void setState(FieldState state) {
-        super.setState(state);
+        this.state = state;
+        this.symbol = state.getSymbol();
     }
 
     @Override
     public String toString() {
-        return "\n{ " + state +
-                " =='" + symbol + '\'' +
-                " ==" + getPosition() +
-                " }";
+        return  state.name().substring(0,2) +
+                "" + getPosition();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.battleship.util;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Random;
 
 public class Util {
     public static Util INSTANCE = new Util();
@@ -11,6 +12,7 @@ public class Util {
     private int boardSize;
     public Dictionary<String, Integer> rowsDictionary = new Hashtable<String, Integer>();
     public Dictionary<String, Integer> colsDictionary = new Hashtable<String, Integer>();
+    private Random gen = new Random();
     private Util() {
     }
 
@@ -51,6 +53,14 @@ public class Util {
 
     public int getBoardSize() {
         return boardSize;
+    }
+
+    public int getRandomIntInBoardRange() {
+        return gen.nextInt(boardSize);
+    }
+
+    public int getRandomIntInRange(int range) {
+        return gen.nextInt(range);
     }
 
 }
