@@ -1,12 +1,10 @@
 package com.battleship.fields;
 
-import com.battleship.util.Symbols;
-
 public abstract class Square{
 
     protected String symbol = null;
     protected FieldState state;
-    private Coordinates position;
+    private final Coordinates position;
     public Square(Coordinates coordinates) {
         position = coordinates;
     }

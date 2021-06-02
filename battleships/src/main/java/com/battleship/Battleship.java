@@ -8,33 +8,67 @@ import com.battleship.util.Util;
 
 public class Battleship {
     public final static Battleship INSTANCE = new Battleship();
+
     public Display display;
     public Input input;
+
     private GameConfiguration config;
     private int boardSize;
+
+    private Player player1;
+    private Player player2;
+
+    public boolean isTest = true;
     private Battleship() {
+        input = new Input();
+        display = new Display();
     }
 
     void init() {
-        mainMenu();
-
-        Util.INSTANCE.init(boardSize);
-        input = new Input();
-        display = new Display();
         display.initWelcome();
         input.pressEnterToContinue();
 
-        Player player1 = PlayerCreator.AI_HARD.getPlayer();
-        Player player2 = PlayerCreator.AI_EASY.getPlayer();
+        if (!isTest) {
+            customGameInit();
+        } else{
+            testGameInit();
+        }
 
         Game.INSTANCE.init(boardSize, config, player1, player2);
+
         Game.INSTANCE.servePlacingPhase();
         Game.INSTANCE.serveShootingPhase();
     }
+    void customGameInit() {
+        mainMenu();
 
-    private void mainMenu() {
-        boardSize = 10;
+        Util.INSTANCE.init(boardSize);
+        display.setUiComponents();
+
+        player1 = input.playerType().getPlayer();
+        player2 = input.playerType().getPlayer();
+
+    }
+
+    void testGameInit() {
+        testConfig();
+
+        Util.INSTANCE.init(boardSize);
+        display.setUiComponents();
+
+        player1 = PlayerCreator.AI_HARD.retrieveNewPlayerObject();
+        player2 = PlayerCreator.AI_HARD.retrieveNewPlayerObject();
+    }
+
+    protected void mainMenu() {
+        display.boardConfigMenu();
+        config = input.getGameConfig();
+        boardSize = config.getBoardSize();
+    }
+    protected void testConfig() {
+//        display.boardConfigMenu();
         config = GameConfiguration.BASIC;
+        boardSize = config.getBoardSize();
     }
 
 

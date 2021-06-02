@@ -1,10 +1,12 @@
 package com.battleship.InputOutput;
 
 import com.battleship.Battleship;
+import com.battleship.GameConfiguration;
 import com.battleship.fields.Coordinates;
 import com.battleship.fields.ShipPart;
 import com.battleship.fields.Square;
 import com.battleship.players.Player;
+import com.battleship.players.PlayerCreator;
 import com.battleship.ships.Ship;
 import com.battleship.ships.ShipType;
 import com.battleship.util.Util;
@@ -12,33 +14,90 @@ import com.battleship.util.Util;
 import java.util.List;
 
 public class Display {
-    public String tab = "\t\t\t\t";
+    public String tab = "\t\t\t\t\t\t\t\t";
     String hr;
      String insideSeparator;
      String rightSideSeparator;
      int boardSize = 10;
 
     public Display() {
-        setUiComponents();
     }
-
-    public void initWelcome() {
-        tabulator();
-        System.out.print("--------------------------------------------------------------------------------------------\n\n");
-        System.out.print(tab+tab+"WELCOME TO BATTLESHIPS GAME\n\n");
-        tabulator();
-        System.out.print("--------------------------------------------------------------------------------------------");
-        newLine();
-        newLine();
-        newLine();
-    }
-
-    private void setUiComponents() {
+    public void setUiComponents() {
         boardSize = Util.INSTANCE.getBoardSize();
         hr = tab + "-".repeat(boardSize + 3 * boardSize + 1 );
         insideSeparator = " | ";
         rightSideSeparator = " |";
     }
+    public void horizontalLine() {
+        System.out.println("\t"+hr);
+    }
+    public void horizontalLine(boolean dbl) {
+        System.out.println("\t\t"+hr+"\t"+hr);
+    }
+    private void tabulator() { System.out.print("\t");}
+    private void newLine() { System.out.print("\n");}
+    public void newLine(int count) {
+        for (int i=0; i<count; i++) {
+            System.out.println();
+        }
+    }
+
+    public void initWelcome() {
+        newLine(5);
+        tabulator();
+        System.out.print(tab+"--------------------------------------------------------------------------------------------\n\n");
+        System.out.print(tab+tab+"WELCOME TO BATTLESHIPS GAME\n\n");
+        tabulator();
+        System.out.print(tab+"--------------------------------------------------------------------------------------------");
+        newLine();
+        newLine();
+        newLine();
+    }
+
+    public void boardConfigMenu() {
+        System.out.println("Choose board configuration:\n");
+        for (GameConfiguration config : GameConfiguration.values()) {
+            System.out.println(String.format("%d. %s config.",config.getBoardSize(), config.name()));
+        }
+    }
+    public void nicknameInput(int num) {
+        String order = num==1?"first":"second";
+        tabulator();
+        System.out.print(String.format("Type nickname for %s player: ", order));
+    }
+    public void playerChoiceMenu() {
+        System.out.println(String.format("Choose player type for player%d :\n", (PlayerCreator.getPlayerCounter() + 1)));
+        for (PlayerCreator playerType : PlayerCreator.values()) {
+            System.out.println(String.format(
+                    "%d. %s player type.",
+                    playerType.getPlayerType(),
+                    playerType.name()));
+        }
+    }
+
+
+    public void autoPlacementDecision(String name) {
+        tabulator();
+        System.out.print(name+" do auto placement? \n\tType anything to place manually, enter to confirm auto: ");
+    }
+    public void displayPlacingScreen(Player player, ShipType shipType) {
+        player.getPlayerBoard().print();
+        Battleship.INSTANCE.display.nicknameTurn(player.getName(), "placing phase");
+        Battleship.INSTANCE.display.shipTypeInfo(shipType);
+    }
+    public void displayPlacingScreen(Player player) {
+        player.getPlayerBoard().print();
+        Battleship.INSTANCE.display.nicknameTurn(player.getName(), "placing phase finished");
+        System.out.println(player.getShips());
+    }
+    public void playerFleet(Player player, boolean isFirstPlayer) {
+        newLine();
+        System.out.println(player.getName() + " === V FLEET V");
+        for (Ship ship : player.getShips()){
+            System.out.println(ship.toString(isFirstPlayer));
+        }
+    }
+
     public void printBoard(Square[][] fields) {
 
         printLettersLine();
@@ -72,7 +131,7 @@ public class Display {
                     contentLine += letter1 + insideSeparator;
                 }
             }
-            contentLine += "\t\t\t";
+            contentLine += tab;
             contentLine += String.format("%d\t| ", i+1);
             for (int j = 0;  j < boardSize; j++) {
                 String letter2 = fields2[i][j].getSymbol();
@@ -89,24 +148,6 @@ public class Display {
 
     }
 
-    public void horizontalLine() {
-        System.out.println("\t"+hr);
-    }
-    public void horizontalLine(boolean dbl) {
-        System.out.println("\t\t"+hr+hr);
-    }
-    private void tabulator() { System.out.print("\t");}
-    private void newLine() { System.out.print("\n");}
-    public void nicknameInput(int num) {
-        String order = num==1?"first":"second";
-        tabulator();
-        System.out.print(String.format("Type nickname for %s player: ", order));
-
-    }
-    public void nicknameTurn(String nickname, String turnType) {
-        System.out.println("");
-        System.out.print(tab+tab+String.format("=== %s's ===\n %s %s turn", nickname, tab+tab, turnType));
-    }
     private void printLettersLine() {
         String line = "\t  ";
         for (int i = 0; i < boardSize; i++) {
@@ -130,20 +171,21 @@ public class Display {
             }
         }
         newLine();
-        System.out.println(tab+"\t\t  "+line+tab+"  "+line);
-        System.out.println("\t\t"+hr+hr);
+        System.out.println(tab+"\t\t  "+line+tab+"\t  "+line);
+        horizontalLine(true);
     }
     private void printNumIndexString(int index) {
         System.out.print(String.format(tab+"%d\t| ", index+1));
     }
 
+
+    public void nicknameTurn(String nickname, String turnType) {
+        System.out.println();
+        System.out.print(tab+String.format("\t  | %s's |  : %s %s", nickname, boardSize==10?tab.substring(0, tab.length()-2):"\t", turnType));
+    }
     public void singleCdInfo(Coordinates coord) {
         tabulator();
         System.out.println("Selected coordinates: "+coord);
-    }
-    public void incorrectRange(Coordinates start, Coordinates end) {
-        tabulator();
-        System.out.println(String.format("Incorrect coordinates range from %s to %s", start, end));
     }
     public void outOfBoardInfo() {
         tabulator();
@@ -177,11 +219,6 @@ public class Display {
         tabulator();
         System.out.print("Type correct coordinates e.g. 'A1': ");
     }
-    public void autoPlacementDecision(String name) {
-        tabulator();
-        System.out.print(name+" do auto placement? \n\tType anything to place manually, enter to confirm auto: ");
-    }
-
     public void incorrectPlacingInfo(Coordinates startPoint, Coordinates endPoint) {
         newLine();
         tabulator();
@@ -202,33 +239,24 @@ public class Display {
     }
 
     public void shotResultInfo(Square objOnField, Ship sunkShip) {
-        System.out.print(tab+tab+tab);
+        System.out.print(boardSize==10?tab.substring(0, tab.length()-2):"\t\t");
         switch (objOnField.getState()){
             case WATER:
-                System.out.print("Missed on : " + objOnField.getPosition());
+                System.out.print("...  MISSED   ...   " + "\n\n");
                 break;
             case HIT_PART:
-                System.out.print("Shooted ship >>> " + objOnField.getPosition());
+                System.out.print("---> HIT ship <--- " + "\n\n");
                 break;
             case MISSED:
-                System.out.print("Missed again ...");
+                System.out.print("... Missed again ...\n\n");
                 break;
             case SUNK_SHIP:
-                System.out.print("Sunk ship +++ " + (sunkShip==null?objOnField.getPosition()+" already sunk.":sunkShip));
+                System.out.print("!+++ SUNK ship +++! \n" + (sunkShip==null?objOnField.getPosition()+" already sunk.":sunkShip));
                 break;
         }
         newLine();
     }
-    public void displayPlacingScreen(Player player, ShipType shipType) {
-        player.getPlayerBoard().print();
-        Battleship.INSTANCE.display.nicknameTurn(player.getName(), "placing phase");
-        Battleship.INSTANCE.display.shipTypeInfo(shipType);
-    }
-    public void displayPlacingScreen(Player player) {
-        player.getPlayerBoard().print();
-        Battleship.INSTANCE.display.nicknameTurn(player.getName(), "placing phase finished");
-        System.out.println(player.getShips());
-    }
+
 
     public void greetWinner(Player winner) {
         String nameLengthBasedLine = " - ".repeat(winner.getName().length());
@@ -246,20 +274,14 @@ public class Display {
         System.out.println((whiteSpace+nameLengthBasedLine+" : ") + whiteSpace + (" : "+nameLengthBasedLine));
     }
 
-    public void playerFleet(Player player) {
-        newLine();
-        System.out.println(player.getName() + " === V FLEET V");
-        System.out.println(player.getShips().toString());
-    }
 
     public void finalScreen(Player player1, Player player2) {
-        Battleship.INSTANCE.display.playerFleet(player1);
-        Battleship.INSTANCE.display.playerFleet(player2);
-        Battleship.INSTANCE.display.printBoards(player1.getPlayerBoard().getFields(), player2.getPlayerBoard().getFields());
+        Battleship.INSTANCE.display.playerFleet(player1, true);
+        Battleship.INSTANCE.display.printBoards(player1.getPlayerBoard().getFields(), player1.getOpponentCopyBoard().getFields());
+        newLine(2);
+        Battleship.INSTANCE.display.playerFleet(player2, true);
+        Battleship.INSTANCE.display.printBoards(player2.getPlayerBoard().getFields(), player2.getOpponentCopyBoard().getFields());
     }
-    public void newLine(int count) {
-        for (int i=0; i<count; i++) {
-            System.out.println("");
-        }
-    }
+
+
 }

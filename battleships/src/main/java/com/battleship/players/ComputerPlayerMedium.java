@@ -1,12 +1,11 @@
 package com.battleship.players;
 
-import com.battleship.Battleship;
 import com.battleship.fields.Coordinates;
 
 
 public class ComputerPlayerMedium extends ComputerPlayer {
     public ComputerPlayerMedium(String name) {
-        super(name+"_EASY");
+        super(name+"_Medium");
     }
 
     @Override

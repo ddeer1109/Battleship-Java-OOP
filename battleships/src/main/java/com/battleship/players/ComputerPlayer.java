@@ -14,7 +14,7 @@ public abstract class ComputerPlayer extends Player{
 
 
     public ComputerPlayer(String name) {
-        super(name+"AI");
+        super(name+"_AI");
     }
 
     @Override
@@ -25,16 +25,6 @@ public abstract class ComputerPlayer extends Player{
                 '}';
     }
 
-    public Coordinates[] getRandomPlacingCoordinates(){
-        Coordinates [] coordinates = new Coordinates[2];
-        int x = Util.INSTANCE.getRandomIntInBoardRange();
-        int y = Util.INSTANCE.getRandomIntInBoardRange();
-        coordinates[0] = new Coordinates(x,y);
-        List<Coordinates> nextTwoFields = coordinates[0].getNextFields();
-        coordinates[1] = nextTwoFields.get(
-                Util.INSTANCE.getRandomIntInRange(nextTwoFields.size()));
-        return coordinates;
-    }
     @Override
     public boolean isAlive() {
         return super.isAlive();
@@ -45,10 +35,10 @@ public abstract class ComputerPlayer extends Player{
         super.markShotResult(coords, newState);
         if (newState == FieldState.HIT_PART) {
             hitShipsAlive.add(coords);
-            System.out.println("HITTED : " + hitShipsAlive);
+//            System.out.println("HITTED : " + hitShipsAlive);
         } else {
             fieldsToIgnore.add(coords);
-            System.out.println("to ignore " + fieldsToIgnore);
+//            System.out.println("to ignore " + fieldsToIgnore);
         }
     }
 
@@ -63,7 +53,7 @@ public abstract class ComputerPlayer extends Player{
         }
         fieldsToIgnore.addAll(newFieldsToIgnore);
         fieldsToIgnore = new HashSet<>(fieldsToIgnore);
-        System.out.println("IGNORED FIELDS ====> "+fieldsToIgnore);
+//        System.out.println("IGNORED FIELDS ====> "+fieldsToIgnore);
     }
 
     // "Easy" AI && base for rest ---
@@ -85,24 +75,25 @@ public abstract class ComputerPlayer extends Player{
     // "Medium" AI ---
     // ---------------
     protected Coordinates getNextRandomCdNextToHitPart(){
+        // Get random coordinates next to hit field
         boolean isShotNotPossible = true;
         Coordinates shotCoords = null;
-        int index = 0;
+        int hitFieldIndex = 0;
 
         while (isShotNotPossible) {
-            List<Coordinates> notIgnoredFields = getPossibleShotsInAllDirections(index);
-
-            if (notIgnoredFields.size() == 0) {
-                index++; continue;
+            List<Coordinates> uncheckedValidCoords = getUncheckedCoordinatesNextToHitField(hitFieldIndex);
+            if (uncheckedValidCoords.size() == 0) {
+                hitFieldIndex++;
+                continue;
             }
-            int randomIndex = Util.INSTANCE.getRandomIntInRange(notIgnoredFields.size());
-            shotCoords = notIgnoredFields.get(randomIndex);
+            int randomIndex = Util.INSTANCE.getRandomIntInRange(uncheckedValidCoords.size());
+            shotCoords = uncheckedValidCoords.get(randomIndex);
             isShotNotPossible = fieldsToIgnore.contains(shotCoords);
             fieldsToIgnore.add(shotCoords);
         }
         return shotCoords;
     }
-    private List<Coordinates> getPossibleShotsInAllDirections(int hitPartIndex) {
+    private List<Coordinates> getUncheckedCoordinatesNextToHitField(int hitPartIndex) {
         List<Coordinates> nextToFields = hitShipsAlive.get(hitPartIndex).getNextFields();
         return filterIgnoredFields(nextToFields);
     }
@@ -110,33 +101,40 @@ public abstract class ComputerPlayer extends Player{
     // "Hard" AI ---
     // ---------------
     protected Coordinates getRandomCdOfTwoHitsDirection(){
-        List<Coordinates> sameDirected = new ArrayList<Coordinates>();
+
+        List<Coordinates> sameDirected = getCoordinatesWithSameOrientation();
         List<Coordinates> fieldsNextToInDirection = new ArrayList<Coordinates>();
 
-        for (int i=0; i < hitShipsAlive.size(); i++) {
-            sameDirected.addAll(getCoordinatesWithSameOrientation(i));
-        }
         String direction = sameDirected.get(0)
                 .isXDirected(sameDirected.get(1)) ? "X" : "Y";
 
+        // Get coordinates next to init coordinates list in proper direction
         for (Coordinates hitCd : sameDirected) {
             fieldsNextToInDirection.addAll(
                     getNextToFieldsInDirection(hitCd, direction));
         }
+        // Filter out coordinates which were yet checked
         sameDirected = filterIgnoredFields(fieldsNextToInDirection);
+
+        // Returns random one
         return sameDirected.get(Util.INSTANCE.getRandomIntInRange(sameDirected.size()));
     }
-    private List<Coordinates> getCoordinatesWithSameOrientation(int hitPartIndex) {
-        List<Coordinates> sameDirection = new ArrayList<Coordinates>();
-        Coordinates checked  = hitShipsAlive.get(hitPartIndex);
-        sameDirection = hitShipsAlive.stream()
-                .filter(coordinates -> checked.isInLineWith(coordinates))
-                .collect(Collectors.toList());
-        return sameDirection;
+    private List<Coordinates> getCoordinatesWithSameOrientation() {
+        // get all coordinates which have one of coordinate equal to other hit ship part
+        List<Coordinates> sameDirectionCoordinates = new ArrayList<Coordinates>();
+        for (int index=0; index < hitShipsAlive.size(); index++) {
+            Coordinates checked  = hitShipsAlive.get(index);
+            sameDirectionCoordinates.addAll(
+                    hitShipsAlive
+                            .stream()
+                            .filter(coordinates -> checked.isInLineWith(coordinates))
+                            .collect(Collectors.toList())
+            );
+        }
+        return sameDirectionCoordinates;
     }
     private List<Coordinates> getNextToFieldsInDirection(Coordinates checkedCoord, String orientation) {
         List<Coordinates> nextToFields = new ArrayList<Coordinates>();
-        checkedCoord.setNextToCoordinates();
         if (orientation == "Y") {
             nextToFields.addAll(checkedCoord.getNextTopBot());
         } else {

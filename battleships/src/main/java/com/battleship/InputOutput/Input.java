@@ -1,10 +1,12 @@
 package com.battleship.InputOutput;
 
 import com.battleship.Battleship;
+import com.battleship.GameConfiguration;
 import com.battleship.fields.Coordinates;
+import com.battleship.players.PlayerCreator;
 import com.battleship.util.Util;
 
-import java.util.List;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Input {
@@ -13,12 +15,14 @@ public class Input {
     }
     public String playerNickname(int num) {
         Battleship.INSTANCE.display.nicknameInput(num);
+        sc.nextLine();
         String input = sc.nextLine();
         return input;
     }
 
     public void pressEnterToContinue(){
-        System.out.println("\n\nPress enter to continue ... ");
+        Battleship.INSTANCE.display.newLine(2);
+        System.out.print("Press enter to continue ... ");
         sc.nextLine();
     }
 
@@ -64,9 +68,42 @@ public class Input {
     }
     public boolean autoPlacementDecision(String name) {
         Battleship.INSTANCE.display.autoPlacementDecision(name);
+        sc.nextLine();
         String input = sc.nextLine();
-        System.out.println("INput ["+input+"]");
         boolean confirmed = input == "";
         return confirmed;
+    }
+    public GameConfiguration getGameConfig() {
+        try {
+            switch(sc.nextInt()) {
+                case 10:
+                    return GameConfiguration.BASIC;
+                case 5:
+                    return GameConfiguration.SMALL;
+                default:
+                    return GameConfiguration.SMALL;
+            }
+        } catch (InputMismatchException err) {
+            return GameConfiguration.SMALL;
+        }
+    }
+    public PlayerCreator playerType() {
+        Battleship.INSTANCE.display.playerChoiceMenu();
+        try {
+            switch(sc.nextInt()) {
+                case 0:
+                    return PlayerCreator.HUMAN;
+                case 1:
+                    return PlayerCreator.AI_EASY;
+                case 2:
+                    return PlayerCreator.AI_MEDIUM;
+                case 3:
+                    return PlayerCreator.AI_HARD;
+                default:
+                    return PlayerCreator.AI_EASY;
+            }
+        } catch (InputMismatchException err) {
+            return PlayerCreator.AI_MEDIUM;
+        }
     }
 }

@@ -12,7 +12,7 @@ public enum Symbols {
     Submarine("S"),
     Destroyer("D");
 
-    private String symbol;
+    private final String symbol;
 
     Symbols(String symbol) {
         this.symbol = symbol;

@@ -1,7 +1,10 @@
 package com.battleship.util;
 
+import com.battleship.fields.Coordinates;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Random;
 
 public class Util {
@@ -12,7 +15,7 @@ public class Util {
     private int boardSize;
     public Dictionary<String, Integer> rowsDictionary = new Hashtable<String, Integer>();
     public Dictionary<String, Integer> colsDictionary = new Hashtable<String, Integer>();
-    private Random gen = new Random();
+    private final Random gen = new Random();
     private Util() {
     }
 
@@ -61,6 +64,18 @@ public class Util {
 
     public int getRandomIntInRange(int range) {
         return gen.nextInt(range);
+    }
+
+
+    public Coordinates[] getRandomPlacingCoordinates(){
+        Coordinates [] coordinates = new Coordinates[2];
+        int x = Util.INSTANCE.getRandomIntInBoardRange();
+        int y = Util.INSTANCE.getRandomIntInBoardRange();
+        coordinates[0] = new Coordinates(x,y);
+        List<Coordinates> nextTwoFields = coordinates[0].getNextFields();
+        coordinates[1] = nextTwoFields.get(
+                Util.INSTANCE.getRandomIntInRange(nextTwoFields.size()));
+        return coordinates;
     }
 
 }

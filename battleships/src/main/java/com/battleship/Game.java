@@ -34,6 +34,8 @@ public class Game {
         placeShips(player2);
     }
     private void placeShips(Player player){
+        // Service placing ship for player. Possible auto placement or manual for human.
+        Battleship.INSTANCE.display.newLine(20);
         boolean confirmedAutoPlacement = false;
         List<Coordinates> placingCoordinates;
         if (player instanceof HumanPlayer){
@@ -41,10 +43,10 @@ public class Game {
         }
         for (ShipType shipType : config.getShipsConfig()){
             if (confirmedAutoPlacement || player instanceof ComputerPlayer) {
-                placingCoordinates = getValidShipPlacement((ComputerPlayer)player, shipType.getLength());
+                placingCoordinates = getValidShipPlacement(player, shipType.getLength());
             } else {
                 Battleship.INSTANCE.display.displayPlacingScreen(player, shipType);
-                placingCoordinates = getValidShipPlacement(player, shipType.getLength());
+                placingCoordinates = getValidShipPlacement((HumanPlayer)player, shipType.getLength());
             }
             Ship ship = new Ship(shipType, placingCoordinates);
             player.getShips().add(ship);
@@ -53,10 +55,14 @@ public class Game {
         Battleship.INSTANCE.display.displayPlacingScreen(player);
         Battleship.INSTANCE.input.pressEnterToContinue();
     }
-    private List<Coordinates> getValidShipPlacement(Player player, int shipLength) {
+
+    private List<Coordinates> getValidShipPlacement(HumanPlayer player, int shipLength) {
+        // Human based placing - with UI and manual coordinates choice
+
         List<Coordinates> placingCoordinates = new ArrayList<>();
         boolean coordinatesWithoutShipsNextTo = false;
 
+        // Valid input until correct placing
         while (!coordinatesWithoutShipsNextTo || placingCoordinates.size() < shipLength) {
             Coordinates startPoint = player.getSingleCd();
             if (player.getPlayerBoard().isShipOnField(startPoint)) {
@@ -75,12 +81,13 @@ public class Game {
         return placingCoordinates;
     }
 
+    private List<Coordinates> getValidShipPlacement(Player player, int shipLength) {
+        // AI based placing - automatic, randomized, without UI
 
-
-    private List<Coordinates> getValidShipPlacement(ComputerPlayer player, int shipLength) {
         List<Coordinates> placingCoordinates = new ArrayList<>();
         boolean coordinatesWithoutShipsNextTo = false;
 
+        // Valid input until correct placing
         while (!coordinatesWithoutShipsNextTo || placingCoordinates.size() < shipLength) {
             Coordinates [] computerCoordinates = player.getRandomPlacingCoordinates();
             Coordinates startPoint = computerCoordinates[0];
@@ -106,13 +113,14 @@ public class Game {
 
         while (opponentAlive) {
             playShootingTurn(currentPlayer, waitingPlayer);
+
+            // Check if opponent isAlive;
             opponentAlive = waitingPlayer.isAlive();
+            // Change turn
             currentPlayer = currentPlayer==player1?player2:player1;
             waitingPlayer = waitingPlayer==player1?player2:player1;
         }
-        winner = !player1.isAlive()?player2:player1;
-        Battleship.INSTANCE.display.finalScreen(player1, player2);
-        Battleship.INSTANCE.display.greetWinner(winner);
+        setTheWinner();
     }
 
     private boolean evaluatingWinner() {
@@ -121,29 +129,33 @@ public class Game {
         return player2isAlive && player1isAlive;
     }
 
+    private void setTheWinner() {
+        winner = !player1.isAlive()?player2:player1;
+        Battleship.INSTANCE.display.greetWinner(winner);
+        Battleship.INSTANCE.display.finalScreen(player1, player2);
+        Battleship.INSTANCE.display.greetWinner(winner);
+    }
+
     private void playShootingTurn(Player player, Player opponent){
+        // Service full player shot turn
+
         Shot shot;
         do {
-            Battleship.INSTANCE.display.newLine(15);
+            Battleship.INSTANCE.display.newLine(25);
             Battleship.INSTANCE.display.printBoards(player.getPlayerBoard().getFields(), player.getOpponentCopyBoard().getFields());
-            Battleship.INSTANCE.display.nicknameTurn(player.getName(), " is choosing target ... ");
+            Battleship.INSTANCE.display.nicknameTurn(player.getName(), " is choosing target ...\n\n\n");
             Battleship.INSTANCE.input.pressEnterToContinue();
 
-
-
             Coordinates input = player.getSingleCd();
+
             shot = new Shot(input, player, opponent);
             shot.executeShot();
 
-            Battleship.INSTANCE.display.newLine(15);
+            Battleship.INSTANCE.display.newLine(25);
             Battleship.INSTANCE.display.printBoards(player.getPlayerBoard().getFields(), player.getOpponentCopyBoard().getFields());
-            Battleship.INSTANCE.display.nicknameTurn(player.getName(), ("Has shot to " + input));
+            Battleship.INSTANCE.display.nicknameTurn(player.getName(), ("=== has shot to " + input + " ==>"));
             Battleship.INSTANCE.display.shotResultInfo(shot.getObjOnField(), shot.getSunkShip());
             Battleship.INSTANCE.input.pressEnterToContinue();
-
-
-
-
 
         } while(shot.getFieldState() != FieldState.MISSED && evaluatingWinner());
     }

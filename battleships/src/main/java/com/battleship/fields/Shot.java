@@ -18,10 +18,10 @@ public class Shot extends Coordinates{
         return sunkShip;
     }
 
-    private Player attackingPlayer;
-    private Player attackedPlayer;
-    private Square objOnField;
+    private final Player attackingPlayer;
+    private final Player attackedPlayer;
 
+    private Square objOnField;
     private FieldState fieldState;
 
 
@@ -46,7 +46,7 @@ public class Shot extends Coordinates{
                     serviceSinkingValidation((ShipPart)objOnField);
                     break;
                 case SUNK_SHIP:
-                    fieldState = fieldState.SUNK_SHIP;
+                    fieldState = FieldState.SUNK_SHIP;
                     attackingPlayer.markShotResult(this, fieldState);
                     break;
                 case MISSED:

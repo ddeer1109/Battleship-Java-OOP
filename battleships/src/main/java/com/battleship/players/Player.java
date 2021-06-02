@@ -8,6 +8,7 @@ import com.battleship.fields.Coordinates;
 import com.battleship.fields.FieldState;
 import com.battleship.fields.ShipPart;
 import com.battleship.ships.Ship;
+import com.battleship.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,12 +18,12 @@ import java.util.stream.Collectors;
 public abstract class Player implements CoordinatesGetter {
 
 
-    private String name;
+    private final String name;
     protected HashSet<Coordinates> fieldsToIgnore = new HashSet<>();
     protected List<Coordinates> hitShipsAlive = new ArrayList<>();
-    private Board playerBoard;
-    private Board opponentCopyBoard;
-    private List<Ship> ships = new ArrayList<Ship>();
+    private final Board playerBoard;
+    private final Board opponentCopyBoard;
+    private final List<Ship> ships = new ArrayList<Ship>();
     public boolean isAlive;
 
     public Player(String name) {
@@ -74,10 +75,12 @@ public abstract class Player implements CoordinatesGetter {
         opponentCopyBoard.getObjectOnField(coords).setState(newState);
     }
     public void markSunkShipParts(List<ShipPart> sunkShipParts) {
-        opponentCopyBoard.setSunkShipFieldsState(sunkShipParts);
+        opponentCopyBoard.markSunkShipParts(sunkShipParts);
     }
 
     public boolean isAlive() {
+        // At least one ship is alive
+
         int countOfShipsAlive = ships.stream()
                 .filter(ship -> ship.isAlive())
                 .collect(Collectors.toList()).size();
@@ -85,10 +88,13 @@ public abstract class Player implements CoordinatesGetter {
     }
 
     public void resetIgnoredFields() {
+        // Clears ignored fields after placing phase
         fieldsToIgnore.clear();
     }
 
     public List<Coordinates> filterIgnoredFields(List<Coordinates> nextToFields) {
+        // Filters out nextToFields of coordinates of not null elements present in fieldsToIgnore or hitShipsAlive
+
         List<Coordinates> notIgnoredFields = nextToFields
                 .stream()
                 .filter(
@@ -99,6 +105,10 @@ public abstract class Player implements CoordinatesGetter {
                 )
                 .collect(Collectors.toList());
         return notIgnoredFields;
+    }
+
+    public Coordinates[] getRandomPlacingCoordinates(){
+        return Util.INSTANCE.getRandomPlacingCoordinates();
     }
 
 

@@ -4,16 +4,12 @@ import com.battleship.Battleship;
 import com.battleship.boards.Board;
 import com.battleship.fields.Coordinates;
 import com.battleship.ships.Ship;
-import com.battleship.util.Util;
 
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 public class HumanPlayer extends Player{
 
     public HumanPlayer(String name) {
-        super(name);
+        super(name+"___HUMAN");
     }
     @Override
     public Coordinates getSingleCd() {

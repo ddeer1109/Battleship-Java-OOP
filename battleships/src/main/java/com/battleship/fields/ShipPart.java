@@ -28,8 +28,8 @@ public class ShipPart extends Square {
 
     @Override
     public String toString() {
-        return  state.name().substring(0,2) +
-                "" + getPosition();
+        return  " "+state.name().substring(0,4) +
+                " " + getPosition();
     }
 
     @Override

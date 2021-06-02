@@ -4,7 +4,7 @@ import com.battleship.fields.Coordinates;
 
 public class ComputerPlayerHard extends ComputerPlayer{
     public ComputerPlayerHard(String name) {
-        super(name+"_HARD");
+        super(name+"_Hard");
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.battleship.fields;
 
-import com.battleship.Game;
 import com.battleship.util.Util;
 
 import java.util.ArrayList;
@@ -9,8 +8,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Coordinates {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     public Coordinates nextUp;
     public Coordinates nextRight;
     public Coordinates nextDown;
@@ -33,27 +32,29 @@ public class Coordinates {
         this.y = y;
     }
 
-    public void setNextToCoordinates() {
-        nextUp = x > 0? new Coordinates((getX()-1), getY()): null;
-        nextRight = y < Util.INSTANCE.getBoardSize()-1 ? new Coordinates(getX(), (getY()+1)): null;
-        nextDown = x < Util.INSTANCE.getBoardSize()-1? new Coordinates((getX()+1), getY()): null;
-        nextLeft = y > 0? new Coordinates(getX(), (getY()-1)): null;
-    }
 
     public Coordinates getNextRight() {
-        return nextRight;
+        return y < Util.INSTANCE.getBoardSize()-1 ?
+                new Coordinates(getX(), (getY()+1)) :
+                null;
     }
 
     public Coordinates getNextDown() {
-        return nextDown;
+        return x < Util.INSTANCE.getBoardSize()-1 ?
+                new Coordinates((getX()+1), getY()) :
+                null;
     }
 
     public Coordinates getNextLeft() {
-        return nextLeft;
+        return y > 0 ?
+                new Coordinates(getX(), (getY()-1)) :
+                null;
     }
 
     public Coordinates getNextUp() {
-        return nextUp;
+        return x > 0 ?
+                new Coordinates((getX()-1), getY()) :
+                null;
     }
 
 
@@ -73,13 +74,12 @@ public class Coordinates {
 
 
     public List<Coordinates> getNextFields(){
-        setNextToCoordinates();
         List<Coordinates> nextFields = new ArrayList<>();
         List<Coordinates> notNullNextToFields = new ArrayList<>();
-        nextFields.add(getNextUp());
-        nextFields.add(getNextRight());
-        nextFields.add(getNextDown());
-        nextFields.add(getNextLeft());
+
+        nextFields.addAll(getNextTopBot());
+        nextFields.addAll(getNextLeftRight());
+
         notNullNextToFields = nextFields.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -93,45 +93,36 @@ public class Coordinates {
     public int getY() {
         return y;
     }
-    public void incrementX(int value) {
-         x+=value;
-    }
-    public void incrementY(int value) {
-         y+=value;
-    }
 
     public List<Coordinates> getCoordinatesInRangeTo(Coordinates endPoint, int distance) {
         List<Coordinates> coordinatesInRange = new ArrayList<>();
-        Coordinates startPos = new Coordinates(getX(), getY());
-        int stepX = 0, stepY = 0;
-        int deltaX = endPoint.getX() - startPos.getX();
-        int deltaY = endPoint.getY() - startPos.getY();
-        if (coordinatesAreDiagonal(deltaX, deltaY))
-            return coordinatesInRange;
+        int deltaX = endPoint.getX() - getX();
+        int deltaY = endPoint.getY() - getY();
 
-        if (deltaX == 0)
-            stepY = deltaY> 0 ? 1 : -1;
-        else
-            stepX = deltaX> 0 ? 1 : -1;
-
+        Coordinates nextCoordinates = getNextCoordinatesByDelta(deltaX, deltaY);
         for (int i = 0;  i < distance; i++){
-            if (startPos.coordinatesOutOfRange())
+            if (nextCoordinates == null)
                 return coordinatesInRange;
-            coordinatesInRange.add(new Coordinates(startPos.getX(), startPos.getY()));
-            startPos.incrementX(stepX); startPos.incrementY(stepY);
+
+            nextCoordinates = nextCoordinates.getNextCoordinatesByDelta(deltaX, deltaY);
+            coordinatesInRange.add(nextCoordinates);
         }
         return coordinatesInRange;
     }
 
-    private boolean coordinatesAreDiagonal(int deltaX, int deltaY) {
-        boolean coordinatesInDiagonalRange = deltaX != 0 && deltaY != 0;
-        return  coordinatesInDiagonalRange;
-    }
-
-    private boolean coordinatesOutOfRange() {
-        boolean outOfRangeX = x >= Game.INSTANCE.getBoardSize() || x < 0;
-        boolean outOfRangeY = y >= Game.INSTANCE.getBoardSize() || y < 0;
-        return outOfRangeX || outOfRangeY;
+    private Coordinates getNextCoordinatesByDelta(int deltaX, int deltaY) {
+        if (deltaX == 0) {
+            // X is not changing - move in horizontal direction
+            return deltaY > 0 ?
+                    getNextRight() : getNextLeft();
+        }
+        else if (deltaY == 0) {
+            // Y is not changing - move in vertical direction
+            return deltaX > 0 ?
+                    getNextUp() : getNextDown();
+        }
+            // else - Incorrect pair - coordinates in diagonal line
+        return null;
     }
 
     public boolean isXDirected(Coordinates another) {
@@ -141,12 +132,14 @@ public class Coordinates {
         return this.y == another.getY();
     }
     public boolean isInLineWith(Coordinates another) {
+        // Checks if one of this co-ordinates is same as another
+        // both same returns false
         if (isXDirected(another)) {
             return Math.abs(this.y - another.getY()) >= 1;
         }else if (isYDirected(another)){
             return Math.abs(this.x - another.getX()) >= 1;
-        } else if (isXDirected(another) && isYDirected(another));
-            return true;
+        }
+        return false;
     }
 
     @Override

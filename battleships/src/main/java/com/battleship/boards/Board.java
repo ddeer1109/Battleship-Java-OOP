@@ -6,7 +6,7 @@ import com.battleship.fields.*;
 import java.util.List;
 
 public class Board {
-    private Square[][] fields;
+    private final Square[][] fields;
     public Board(int boardSize) {
         this.fields = new Square[boardSize][boardSize];
         initFields();
@@ -70,7 +70,7 @@ public class Board {
         return fields;
     }
 
-    public void setSunkShipFieldsState(List<ShipPart> sunkShipParts) {
+    public void markSunkShipParts(List<ShipPart> sunkShipParts) {
         for (ShipPart part : sunkShipParts) {
             getObjectOnField(part.getPosition())
                     .setState(FieldState.SUNK_SHIP);

@@ -3,16 +3,14 @@ package com.battleship;
 import com.battleship.ships.ShipType;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 public enum GameConfiguration {
     BASIC(10),
     SMALL(5),
     ;
-    List<ShipType> shipsConfig = new ArrayList<>();
-    int boardSize;
+    private List<ShipType> shipsConfig = new ArrayList<>();
+    private final int boardSize;
 
     GameConfiguration(int boardSize) {
         this.boardSize = boardSize;
@@ -53,5 +51,9 @@ public enum GameConfiguration {
     }
     public  List<ShipType> getShipsConfig() {
         return shipsConfig;
+    }
+
+    public int getBoardSize() {
+        return boardSize;
     }
 }

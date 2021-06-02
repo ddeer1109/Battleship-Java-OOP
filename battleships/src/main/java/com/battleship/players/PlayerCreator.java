@@ -1,23 +1,33 @@
 package com.battleship.players;
 
+import com.battleship.Battleship;
+
 public enum PlayerCreator {
     HUMAN(0),
     AI_EASY(1),
     AI_MEDIUM(2),
     AI_HARD(3),
     ;
+
+
     private static int playerCounter = 0;
     private int playerType;
+
     private Player player;
 
     PlayerCreator(int type) {
         playerType = type;
     }
 
+    PlayerCreator() {
+    }
+
     public void setPlayer() {
         playerCounter++;
-//        String nickname = Battleship.INSTANCE.input.playerNickname(playerCounter);
-        String nickname = "Player" + playerCounter;
+        String nickname =
+                Battleship.INSTANCE.isTest ? ""
+                        : Battleship.INSTANCE.input.playerNickname(playerCounter);
+        nickname = nickname !=""? nickname :  ("Player" + playerCounter);
         switch (playerType) {
             case 0:
                 player = new HumanPlayer(nickname);
@@ -37,8 +47,23 @@ public enum PlayerCreator {
     }
 
     public Player getPlayer() {
+//        setPlayer();
+        return player;
+    }
+
+    public Player retrieveNewPlayerObject(){
         setPlayer();
         return player;
     }
 
+    public int getPlayerType() {
+        return playerType;
+    }
+
+
+    public static int getPlayerCounter() {
+        return playerCounter;
+    }
+
 }
+
