@@ -13,6 +13,15 @@ public abstract class Square{
         this.symbol = symbol;
     }
 
+    @Override
+    public String toString() {
+        return "Square{" +
+                "symbol='" + symbol + '\'' +
+                ", state=" + state +
+                ", position=" + position +
+                '}';
+    }
+
     public String getSymbol() {
         return symbol;
     }

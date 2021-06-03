@@ -23,7 +23,9 @@ public class Battleship {
         input = new Input();
         display = new Display();
     }
+    public void initTest(int boardSize){
 
+    }
     void init() {
         display.initWelcome();
         input.pressEnterToContinue();

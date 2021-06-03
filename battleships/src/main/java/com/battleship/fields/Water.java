@@ -28,4 +28,9 @@ public class Water extends Square{
     public void setState(FieldState state) {
         super.setState(state);
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

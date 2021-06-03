@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Board {
     private final Square[][] fields;
-    public Board(int boardSize) {
+    protected Board(int boardSize) {
         this.fields = new Square[boardSize][boardSize];
         initFields();
     }

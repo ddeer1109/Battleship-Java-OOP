@@ -10,6 +10,17 @@ import java.util.stream.Collectors;
 public class Coordinates {
     private final int x;
     private final int y;
+
+
+    public static void setValidRange(int boardSize) {
+        validRange = boardSize-1;
+    }
+
+    public static int getValidRange() {
+        return validRange;
+    }
+
+    private static int validRange;
     public Coordinates nextUp;
     public Coordinates nextRight;
     public Coordinates nextDown;
@@ -33,25 +44,25 @@ public class Coordinates {
     }
 
 
-    public Coordinates getNextRight() {
-        return y < Util.INSTANCE.getBoardSize()-1 ?
+    public Coordinates getNextAxisY() {
+        return y < validRange ?
                 new Coordinates(getX(), (getY()+1)) :
                 null;
     }
 
-    public Coordinates getNextDown() {
-        return x < Util.INSTANCE.getBoardSize()-1 ?
+    public Coordinates getNextAxisX() {
+        return x < validRange ?
                 new Coordinates((getX()+1), getY()) :
                 null;
     }
 
-    public Coordinates getNextLeft() {
+    public Coordinates getPreviousAxisY() {
         return y > 0 ?
                 new Coordinates(getX(), (getY()-1)) :
                 null;
     }
 
-    public Coordinates getNextUp() {
+    public Coordinates getPreviousAxisX() {
         return x > 0 ?
                 new Coordinates((getX()-1), getY()) :
                 null;
@@ -60,15 +71,15 @@ public class Coordinates {
 
     public List<Coordinates> getNextLeftRight(){
         List<Coordinates> nextFields = new ArrayList<>();
-        nextFields.add(getNextLeft());
-        nextFields.add(getNextRight());
+        nextFields.add(getPreviousAxisY());
+        nextFields.add(getNextAxisY());
         return nextFields;
     }
 
     public List<Coordinates> getNextTopBot(){
         List<Coordinates> nextFields = new ArrayList<>();
-        nextFields.add(getNextUp());
-        nextFields.add(getNextDown());
+        nextFields.add(getPreviousAxisX());
+        nextFields.add(getNextAxisX());
         return nextFields;
     }
 
@@ -85,8 +96,6 @@ public class Coordinates {
                 .collect(Collectors.toList());
         return notNullNextToFields;
     }
-
-
     public int getX() {
         return x;
     }
@@ -99,12 +108,11 @@ public class Coordinates {
         int deltaX = endPoint.getX() - getX();
         int deltaY = endPoint.getY() - getY();
 
-        Coordinates nextCoordinates = getNextCoordinatesByDelta(deltaX, deltaY);
+        Coordinates nextCoordinates = new Coordinates(getX(), getY());
         for (int i = 0;  i < distance; i++){
+            nextCoordinates = nextCoordinates.getNextCoordinatesByDelta(deltaX, deltaY);
             if (nextCoordinates == null)
                 return coordinatesInRange;
-
-            nextCoordinates = nextCoordinates.getNextCoordinatesByDelta(deltaX, deltaY);
             coordinatesInRange.add(nextCoordinates);
         }
         return coordinatesInRange;
@@ -114,12 +122,12 @@ public class Coordinates {
         if (deltaX == 0) {
             // X is not changing - move in horizontal direction
             return deltaY > 0 ?
-                    getNextRight() : getNextLeft();
+                    getNextAxisY() : getPreviousAxisY();
         }
         else if (deltaY == 0) {
             // Y is not changing - move in vertical direction
             return deltaX > 0 ?
-                    getNextUp() : getNextDown();
+                     getNextAxisX() : getPreviousAxisX();
         }
             // else - Incorrect pair - coordinates in diagonal line
         return null;

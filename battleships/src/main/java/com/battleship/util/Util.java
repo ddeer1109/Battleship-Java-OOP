@@ -13,6 +13,11 @@ public class Util {
 
     private char[] letterIndexes;
     private int boardSize;
+
+    public void setBoardSize(int boardSize) {
+        this.boardSize = boardSize;
+    }
+
     public Dictionary<String, Integer> rowsDictionary = new Hashtable<String, Integer>();
     public Dictionary<String, Integer> colsDictionary = new Hashtable<String, Integer>();
     private final Random gen = new Random();
@@ -21,6 +26,7 @@ public class Util {
 
     public void init(int boardSize) {
         this.boardSize = boardSize;
+        Coordinates.setValidRange(boardSize);
         setLetterIndexesArray(boardSize);
         createCoordinatesDictionaries();
     }
