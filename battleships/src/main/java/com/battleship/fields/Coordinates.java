@@ -44,25 +44,25 @@ public class Coordinates {
     }
 
 
-    public Coordinates getNextAxisY() {
+    public Coordinates getNextRight() {
         return y < validRange ?
                 new Coordinates(getX(), (getY()+1)) :
                 null;
     }
 
-    public Coordinates getNextAxisX() {
+    public Coordinates getNextDown() {
         return x < validRange ?
                 new Coordinates((getX()+1), getY()) :
                 null;
     }
 
-    public Coordinates getPreviousAxisY() {
+    public Coordinates getNextLeft() {
         return y > 0 ?
                 new Coordinates(getX(), (getY()-1)) :
                 null;
     }
 
-    public Coordinates getPreviousAxisX() {
+    public Coordinates getNextTop() {
         return x > 0 ?
                 new Coordinates((getX()-1), getY()) :
                 null;
@@ -71,15 +71,15 @@ public class Coordinates {
 
     public List<Coordinates> getNextLeftRight(){
         List<Coordinates> nextFields = new ArrayList<>();
-        nextFields.add(getPreviousAxisY());
-        nextFields.add(getNextAxisY());
+        nextFields.add(getNextLeft());
+        nextFields.add(getNextRight());
         return nextFields;
     }
 
     public List<Coordinates> getNextTopBot(){
         List<Coordinates> nextFields = new ArrayList<>();
-        nextFields.add(getPreviousAxisX());
-        nextFields.add(getNextAxisX());
+        nextFields.add(getNextTop());
+        nextFields.add(getNextDown());
         return nextFields;
     }
 
@@ -122,12 +122,12 @@ public class Coordinates {
         if (deltaX == 0) {
             // X is not changing - move in horizontal direction
             return deltaY > 0 ?
-                    getNextAxisY() : getPreviousAxisY();
+                    getNextRight() : getNextLeft();
         }
         else if (deltaY == 0) {
             // Y is not changing - move in vertical direction
             return deltaX > 0 ?
-                     getNextAxisX() : getPreviousAxisX();
+                     getNextDown() : getNextTop();
         }
             // else - Incorrect pair - coordinates in diagonal line
         return null;

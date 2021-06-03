@@ -18,7 +18,7 @@ public class Battleship {
     private Player player1;
     private Player player2;
 
-    public boolean isTest = true;
+    public boolean isTest = false;
     private Battleship() {
         input = new Input();
         display = new Display();
@@ -47,8 +47,8 @@ public class Battleship {
         Util.INSTANCE.init(boardSize);
         display.setUiComponents();
 
-        player1 = input.playerType().getPlayer();
-        player2 = input.playerType().getPlayer();
+        player1 = input.playerType().retrieveNewPlayerObject();
+        player2 = input.playerType().retrieveNewPlayerObject();
 
     }
 

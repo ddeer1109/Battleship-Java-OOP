@@ -45,9 +45,12 @@ public abstract class ComputerPlayer extends Player{
     @Override
     public void markSunkShipParts(List<ShipPart> sunkShipParts) {
         super.markSunkShipParts(sunkShipParts);
+
         HashSet<Coordinates> newFieldsToIgnore = new HashSet<>();
+
         for (ShipPart part : sunkShipParts) {
-            newFieldsToIgnore.addAll(part.getPosition().getNextFields());
+            newFieldsToIgnore.addAll(part.getPosition()
+                                                        .getNextFields());
             newFieldsToIgnore.add(part.getPosition());
             hitShipsAlive.remove(part.getPosition());
         }

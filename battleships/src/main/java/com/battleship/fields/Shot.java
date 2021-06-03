@@ -6,8 +6,8 @@ import com.battleship.ships.Ship;
 import java.util.concurrent.TimeUnit;
 
 public class Shot extends Coordinates{
-    public FieldState getFieldState() {
-        return fieldState;
+    public FieldState getFieldStateAfterShot() {
+        return fieldStateAfterShot;
     }
 
     public Square getObjOnField() {
@@ -22,7 +22,7 @@ public class Shot extends Coordinates{
     private final Player attackedPlayer;
 
     private Square objOnField;
-    private FieldState fieldState;
+    private FieldState fieldStateAfterShot;
 
 
     private Ship sunkShip;
@@ -36,7 +36,8 @@ public class Shot extends Coordinates{
     public void executeShot(){
         try {
             objOnField = attackedPlayer.getPlayerBoard().getObjectOnField(this);
-            switch (objOnField.getState()){
+            switch (objOnField.getState())
+            {
                 case WATER:
                     serviceMissHit();
                     TimeUnit.MILLISECONDS.sleep(10);
@@ -46,8 +47,8 @@ public class Shot extends Coordinates{
                     serviceSinkingValidation((ShipPart)objOnField);
                     break;
                 case SUNK_SHIP:
-                    fieldState = FieldState.SUNK_SHIP;
-                    attackingPlayer.markShotResult(this, fieldState);
+                    fieldStateAfterShot = FieldState.SUNK_SHIP;
+                    attackingPlayer.markShotResult(this, fieldStateAfterShot);
                     break;
                 case MISSED:
                     System.out.println("Missed again");
@@ -59,20 +60,21 @@ public class Shot extends Coordinates{
         }
     }
     public void serviceMissHit() {
-        fieldState = FieldState.MISSED;
-        attackingPlayer.markShotResult(this, fieldState);
+        fieldStateAfterShot = FieldState.MISSED;
+        attackingPlayer.markShotResult(this, fieldStateAfterShot);
     }
     public void serviceHittingShip() {
         objOnField.setState(FieldState.HIT_PART);
-        fieldState = FieldState.HIT_PART;
-        attackingPlayer.markShotResult(this, fieldState);
+        fieldStateAfterShot = FieldState.HIT_PART;
+        attackingPlayer.markShotResult(this, fieldStateAfterShot);
     }
     public void serviceSinkingValidation(ShipPart hitPart) {
         Ship hitShip = attackedPlayer.getShipByPart(hitPart);
         hitShip.isSunk();
+
         if (!hitShip.isAlive()) {
             attackingPlayer.markSunkShipParts(hitShip.getParts());
-            fieldState = FieldState.SUNK_SHIP;
+            fieldStateAfterShot = FieldState.SUNK_SHIP;
             sunkShip = hitShip;
         }
     }

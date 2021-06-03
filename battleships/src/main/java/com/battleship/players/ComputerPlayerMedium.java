@@ -11,20 +11,13 @@ public class ComputerPlayerMedium extends ComputerPlayer {
     @Override
     public Coordinates getSingleCd() {
         Coordinates shotCoords;
+
         shotCoords = super.getRandomCdExcludeIgnoredFields();
+
         if (hitShipsAlive.size() != 0){
             shotCoords = super.getNextRandomCdNextToHitPart();
         }
         return shotCoords;
     }
 
-    @Override
-    public boolean isAlive() {
-        return super.isAlive();
-    }
-
-    @Override
-    public Coordinates[] getDoubleCd() {
-        return super.getRandomPlacingCoordinates();
-    }
 }

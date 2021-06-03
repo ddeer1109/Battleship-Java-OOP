@@ -68,7 +68,6 @@ public class Input {
     }
     public boolean autoPlacementDecision(String name) {
         Battleship.INSTANCE.display.autoPlacementDecision(name);
-        sc.nextLine();
         String input = sc.nextLine();
         boolean confirmed = input == "";
         return confirmed;

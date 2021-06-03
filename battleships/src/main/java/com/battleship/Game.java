@@ -42,12 +42,14 @@ public class Game {
             confirmedAutoPlacement = Battleship.INSTANCE.input.autoPlacementDecision(player.getName());
         }
         for (ShipType shipType : config.getShipsConfig()){
+
             if (confirmedAutoPlacement || player instanceof ComputerPlayer) {
                 placingCoordinates = getValidShipPlacement(player, shipType.getLength());
             } else {
                 Battleship.INSTANCE.display.displayPlacingScreen(player, shipType);
                 placingCoordinates = getValidShipPlacement((HumanPlayer)player, shipType.getLength());
             }
+
             Ship ship = new Ship(shipType, placingCoordinates);
             player.getShips().add(ship);
             player.setShipOnBoard(ship);
@@ -64,7 +66,9 @@ public class Game {
 
         // Valid input until correct placing
         while (!coordinatesWithoutShipsNextTo || placingCoordinates.size() < shipLength) {
+
             Coordinates startPoint = player.getSingleCd();
+
             if (player.getPlayerBoard().isShipOnField(startPoint)) {
                 Battleship.INSTANCE.display.shipOnField(startPoint);
                 continue;
@@ -89,7 +93,9 @@ public class Game {
 
         // Valid input until correct placing
         while (!coordinatesWithoutShipsNextTo || placingCoordinates.size() < shipLength) {
+
             Coordinates [] computerCoordinates = player.getRandomPlacingCoordinates();
+
             Coordinates startPoint = computerCoordinates[0];
             if (player.getPlayerBoard().isShipOnField(startPoint)) {
                 continue;
@@ -106,7 +112,10 @@ public class Game {
 
 
     protected void serveShootingPhase() {
-        player1.resetIgnoredFields(); player2.resetIgnoredFields();
+
+        player1.resetIgnoredFields();
+        player2.resetIgnoredFields();
+
         boolean opponentAlive = true;
         Player currentPlayer = player1;
         Player waitingPlayer = player2;
@@ -117,8 +126,8 @@ public class Game {
             // Check if opponent isAlive;
             opponentAlive = waitingPlayer.isAlive();
             // Change turn
-            currentPlayer = currentPlayer==player1?player2:player1;
-            waitingPlayer = waitingPlayer==player1?player2:player1;
+            currentPlayer = currentPlayer==player1 ? player2 : player1;
+            waitingPlayer = waitingPlayer==player1 ? player2 : player1;
         }
         setTheWinner();
     }
@@ -157,7 +166,7 @@ public class Game {
             Battleship.INSTANCE.display.shotResultInfo(shot.getObjOnField(), shot.getSunkShip());
             Battleship.INSTANCE.input.pressEnterToContinue();
 
-        } while(shot.getFieldState() != FieldState.MISSED && evaluatingWinner());
+        } while(shot.getFieldStateAfterShot() != FieldState.MISSED && evaluatingWinner());
     }
 
     public int getBoardSize() {

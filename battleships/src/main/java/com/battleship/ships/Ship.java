@@ -11,10 +11,6 @@ import java.util.List;
 public class Ship {
     private List<ShipPart> parts = new ArrayList<>();
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
     private boolean isAlive;
     private final ShipType type;
 
@@ -37,6 +33,10 @@ public class Ship {
         }
         sunkShip();
         return allHit;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
     private void sunkShip() {
         isAlive = false;

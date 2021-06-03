@@ -11,6 +11,7 @@ public class ComputerPlayerHard extends ComputerPlayer{
     public Coordinates getSingleCd() {
         Coordinates shotCoords;
         shotCoords = super.getRandomCdExcludeIgnoredFields();
+
         if(hitShipsAlive.size() >= 2){
             shotCoords = super.getRandomCdOfTwoHitsDirection();
         }

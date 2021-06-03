@@ -35,14 +35,14 @@ class CoordinatesTest {
         Coordinates shouldPass = new Coordinates(1,3);
         System.out.println("\nshould pass");
         System.out.print( shouldPass + " -> ");
-        System.out.print(shouldPass.getPreviousAxisX());
+        System.out.print(shouldPass.getNextTop());
 
         System.out.println("\nshould pass NOT");
         System.out.print( shouldNotPass + " -> ");
-        System.out.print(shouldNotPass.getPreviousAxisX());
+        System.out.print(shouldNotPass.getNextTop());
 //        System.out.println(shouldNotPass.getPreviousAxisX());
 
-        assertTrue(shouldPass.getPreviousAxisX() != null && shouldNotPass.getPreviousAxisX() == null, "There is no next up for first vertical coordinate.");
+        assertTrue(shouldPass.getNextTop() != null && shouldNotPass.getNextTop() == null, "There is no next up for first vertical coordinate.");
 
     }
     @Test
@@ -53,14 +53,14 @@ class CoordinatesTest {
         Coordinates shouldPass = new Coordinates(1,Coordinates.getValidRange()-1);
         System.out.println("\nshould pass");
         System.out.print( shouldPass + " -> ");
-        System.out.print(shouldPass.getNextAxisY());
+        System.out.print(shouldPass.getNextRight());
 
         System.out.println("\nshould pass NOT");
         System.out.print( shouldNotPass + " -> ");
-        System.out.print(shouldNotPass.getNextAxisY());
+        System.out.print(shouldNotPass.getNextRight());
 //        System.out.println(shouldNotPass.getNextAxisY());
 
-        assertTrue(shouldPass.getNextAxisY() != null && shouldNotPass.getNextAxisY() == null, "There is no next bottom for last vertical coordinate.");
+        assertTrue(shouldPass.getNextRight() != null && shouldNotPass.getNextRight() == null, "There is no next bottom for last vertical coordinate.");
 
     }
     @Test
@@ -71,14 +71,14 @@ class CoordinatesTest {
         Coordinates shouldPass = new Coordinates(Coordinates.getValidRange()-1,3);
         System.out.println("\nshould pass");
         System.out.print( shouldPass + " -> ");
-        System.out.print(shouldPass.getNextAxisX());
+        System.out.print(shouldPass.getNextDown());
 
         System.out.println("\nshould pass NOT");
         System.out.print( shouldNotPass + " -> ");
-        System.out.print(shouldNotPass.getNextAxisX());
+        System.out.print(shouldNotPass.getNextDown());
 //        System.out.println(shouldNotPass.getNextAxisX());
 
-        assertTrue(shouldPass.getNextAxisX() != null && shouldNotPass.getNextAxisX() == null, "There is no next right for last horizontal coordinate.");
+        assertTrue(shouldPass.getNextDown() != null && shouldNotPass.getNextDown() == null, "There is no next right for last horizontal coordinate.");
 
 
     }
@@ -92,15 +92,15 @@ class CoordinatesTest {
 
         System.out.println("\nshould pass");
         System.out.print( shouldPass + " -> ");
-        System.out.print(shouldPass.getPreviousAxisY());
+        System.out.print(shouldPass.getNextLeft());
 
         System.out.println("\nshould pass NOT");
         System.out.print( shouldNotPass + " -> ");
-        System.out.print(shouldNotPass.getPreviousAxisY());
+        System.out.print(shouldNotPass.getNextLeft());
 //        System.out.println(shouldNotPass.getPreviousAxisY());
 
-        assertTrue(shouldPass.getPreviousAxisY() != null
-                        && shouldNotPass.getPreviousAxisY() == null,
+        assertTrue(shouldPass.getNextLeft() != null
+                        && shouldNotPass.getNextLeft() == null,
                 "There is no next left for first horizontal coordinate.");
 
     }

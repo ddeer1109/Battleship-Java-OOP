@@ -54,15 +54,19 @@ public abstract class Player implements CoordinatesGetter {
     public List<Ship> getShips() {
         return ships;
     }
+
     public void setShipOnBoard(Ship ship) {
         for (ShipPart part : ship.getParts()){
             playerBoard.setShipPart(part);
+
             Coordinates partCoord = part.getPosition();
+
             fieldsToIgnore.add(partCoord);
             fieldsToIgnore.addAll(partCoord.getNextFields());
         }
         fieldsToIgnore = new HashSet<>(fieldsToIgnore);
     }
+
     public Ship getShipByPart(ShipPart part) {
         for (Ship ship : ships){
             if (ship.getParts().contains(part))
@@ -82,8 +86,8 @@ public abstract class Player implements CoordinatesGetter {
         // At least one ship is alive
 
         int countOfShipsAlive = ships.stream()
-                .filter(ship -> ship.isAlive())
-                .collect(Collectors.toList()).size();
+                                                .filter(ship -> ship.isAlive())
+                                                .collect(Collectors.toList()).size();
         return countOfShipsAlive > 0;
     }
 
@@ -96,23 +100,19 @@ public abstract class Player implements CoordinatesGetter {
         // Filters out nextToFields of coordinates of not null elements present in fieldsToIgnore or hitShipsAlive
 
         List<Coordinates> notIgnoredFields = nextToFields
-                .stream()
-                .filter(
-                        field ->
-                                !fieldsToIgnore.contains(field) &&
-                                !hitShipsAlive.contains(field) &&
-                                field != null
-                )
-                .collect(Collectors.toList());
+                                                        .stream()
+                                                        .filter(
+                                                                field ->
+                                                                        !fieldsToIgnore.contains(field) &&
+                                                                        !hitShipsAlive.contains(field) &&
+                                                                        field != null
+                                                        )
+                                                        .collect(Collectors.toList());
+
         return notIgnoredFields;
     }
 
     public Coordinates[] getRandomPlacingCoordinates(){
         return Util.INSTANCE.getRandomPlacingCoordinates();
     }
-
-
-
-
-
 }
