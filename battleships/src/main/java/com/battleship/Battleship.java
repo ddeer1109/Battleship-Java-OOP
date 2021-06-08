@@ -15,37 +15,39 @@ public class Battleship {
     private GameConfiguration config;
     private int boardSize;
 
+    private Game gameInstance;
+
     private Player player1;
     private Player player2;
 
-    public boolean isTest = false;
+    public boolean isTest = true;
+
     private Battleship() {
         input = new Input();
         display = new Display();
-    }
-    public void initTest(int boardSize){
-
     }
     void init() {
         display.initWelcome();
         input.pressEnterToContinue();
 
-        if (!isTest) {
-            customGameInit();
-        } else{
+        if (isTest) {
             testGameInit();
+        } else{
+            customGameInit();
         }
-
-        Game.INSTANCE.init(boardSize, config, player1, player2);
-
-        Game.INSTANCE.servePlacingPhase();
-        Game.INSTANCE.serveShootingPhase();
+        gameInstance = new Game();
+        gameInstance.init(config, player1, player2);
     }
+    void startGame() {
+        gameInstance.servePlacingPhase();
+        gameInstance.serveShootingPhase();
+    }
+
     void customGameInit() {
         mainMenu();
 
         Util.INSTANCE.init(boardSize);
-        display.setUiComponents();
+        display.setUiComponents(boardSize);
 
         player1 = input.playerType().retrieveNewPlayerObject();
         player2 = input.playerType().retrieveNewPlayerObject();
@@ -56,9 +58,9 @@ public class Battleship {
         testConfig();
 
         Util.INSTANCE.init(boardSize);
-        display.setUiComponents();
+        display.setUiComponents(boardSize);
 
-        player1 = PlayerCreator.AI_HARD.retrieveNewPlayerObject();
+        player1 = PlayerCreator.AI_MEDIUM.retrieveNewPlayerObject();
         player2 = PlayerCreator.AI_HARD.retrieveNewPlayerObject();
     }
 

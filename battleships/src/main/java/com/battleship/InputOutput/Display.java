@@ -4,6 +4,7 @@ import com.battleship.Battleship;
 import com.battleship.GameConfiguration;
 import com.battleship.fields.Coordinates;
 import com.battleship.fields.ShipPart;
+import com.battleship.fields.Shot;
 import com.battleship.fields.Square;
 import com.battleship.players.Player;
 import com.battleship.players.PlayerCreator;
@@ -22,8 +23,8 @@ public class Display {
 
     public Display() {
     }
-    public void setUiComponents() {
-        boardSize = Util.INSTANCE.getBoardSize();
+    public void setUiComponents(int boardSize) {
+        this.boardSize = boardSize;
         hr = tab + "-".repeat(boardSize + 3 * boardSize + 1 );
         insideSeparator = " | ";
         rightSideSeparator = " |";
@@ -86,9 +87,10 @@ public class Display {
         Battleship.INSTANCE.display.shipTypeInfo(shipType);
     }
     public void displayPlacingScreen(Player player) {
+        System.out.println(player.getShips());
         player.getPlayerBoard().print();
         Battleship.INSTANCE.display.nicknameTurn(player.getName(), "placing phase finished");
-        System.out.println(player.getShips());
+
     }
     public void playerFleet(Player player, boolean isFirstPlayer) {
         newLine();
@@ -238,6 +240,26 @@ public class Display {
         newLine();
     }
 
+
+    public void beforeShootingUI(Player player){
+        Battleship.INSTANCE.display.newLine(25);
+        Battleship.INSTANCE.display.printBoards(player.getPlayerBoard().getFields(), player.getOpponentCopyBoard().getFields());
+        Battleship.INSTANCE.display.nicknameTurn(player.getName(), " is choosing target ...\n\n\n");
+        Battleship.INSTANCE.input.pressEnterToContinue();
+    }
+    public void afterShootingUI(Player player, Shot shot) {
+        Square shootObject = shot.getObjOnField();
+        Battleship.INSTANCE.display.newLine(25);
+        Battleship.INSTANCE.display.printBoards(player.getPlayerBoard().getFields(), player.getOpponentCopyBoard().getFields());
+        Battleship.INSTANCE.display.nicknameTurn(player.getName(), ("=== has shot to " + shootObject.getPosition() + " ==>"));
+        Battleship.INSTANCE.display.shotResultInfo(shootObject, shot.getSunkShip());
+        Battleship.INSTANCE.input.pressEnterToContinue();
+    }
+    public void finishedGameUI(Player winner, Player player1, Player player2){
+        Battleship.INSTANCE.display.greetWinner(winner);
+        Battleship.INSTANCE.display.finalScreen(player1, player2);
+        Battleship.INSTANCE.display.greetWinner(winner);
+    }
     public void shotResultInfo(Square objOnField, Ship sunkShip) {
         System.out.print(boardSize==10?tab.substring(0, tab.length()-2):"\t\t");
         switch (objOnField.getState()){

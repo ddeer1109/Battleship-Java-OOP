@@ -55,6 +55,7 @@ public abstract class ComputerPlayer extends Player{
             hitShipsAlive.remove(part.getPosition());
         }
         fieldsToIgnore.addAll(newFieldsToIgnore);
+        System.out.println(fieldsToIgnore);
         fieldsToIgnore = new HashSet<>(fieldsToIgnore);
 //        System.out.println("IGNORED FIELDS ====> "+fieldsToIgnore);
     }

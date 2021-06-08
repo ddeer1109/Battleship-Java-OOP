@@ -13,18 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    public final static Game INSTANCE = new Game();
-    private int boardSize;
+//    public final static Game INSTANCE = new Game();
     private Player player1;
     private Player player2;
     private GameConfiguration config;
     protected Player winner;
 
-    private Game() {
+    Game() {
 
     }
-    protected void init(int boardSize, GameConfiguration config, Player player1, Player player2) {
-        this.boardSize = boardSize;
+    protected void init(GameConfiguration config, Player player1, Player player2) {
         this.config = config;
         this.player1 = player1;
         this.player2 = player2;
@@ -130,6 +128,7 @@ public class Game {
             waitingPlayer = waitingPlayer==player1 ? player2 : player1;
         }
         setTheWinner();
+        Battleship.INSTANCE.display.finishedGameUI(winner, player1, player2);
     }
 
     private boolean evaluatingWinner() {
@@ -140,9 +139,6 @@ public class Game {
 
     private void setTheWinner() {
         winner = !player1.isAlive()?player2:player1;
-        Battleship.INSTANCE.display.greetWinner(winner);
-        Battleship.INSTANCE.display.finalScreen(player1, player2);
-        Battleship.INSTANCE.display.greetWinner(winner);
     }
 
     private void playShootingTurn(Player player, Player opponent){
@@ -150,26 +146,14 @@ public class Game {
 
         Shot shot;
         do {
-            Battleship.INSTANCE.display.newLine(25);
-            Battleship.INSTANCE.display.printBoards(player.getPlayerBoard().getFields(), player.getOpponentCopyBoard().getFields());
-            Battleship.INSTANCE.display.nicknameTurn(player.getName(), " is choosing target ...\n\n\n");
-            Battleship.INSTANCE.input.pressEnterToContinue();
+            Battleship.INSTANCE.display.beforeShootingUI(player);
 
-            Coordinates input = player.getSingleCd();
-
-            shot = new Shot(input, player, opponent);
+            Coordinates shootCoordinates = player.getSingleCd();
+            shot = new Shot(shootCoordinates, player, opponent);
             shot.executeShot();
 
-            Battleship.INSTANCE.display.newLine(25);
-            Battleship.INSTANCE.display.printBoards(player.getPlayerBoard().getFields(), player.getOpponentCopyBoard().getFields());
-            Battleship.INSTANCE.display.nicknameTurn(player.getName(), ("=== has shot to " + input + " ==>"));
-            Battleship.INSTANCE.display.shotResultInfo(shot.getObjOnField(), shot.getSunkShip());
-            Battleship.INSTANCE.input.pressEnterToContinue();
+            Battleship.INSTANCE.display.afterShootingUI(player, shot);
 
-        } while(shot.getFieldStateAfterShot() != FieldState.MISSED && evaluatingWinner());
-    }
-
-    public int getBoardSize() {
-        return boardSize;
+           } while(shot.getFieldStateAfterShot() != FieldState.MISSED && evaluatingWinner());
     }
 }
