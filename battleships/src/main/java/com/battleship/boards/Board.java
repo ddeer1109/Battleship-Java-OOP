@@ -65,7 +65,6 @@ public class Board {
         return fields[coordinates.getX()][coordinates.getY()];
     }
 
-
     public Square[][] getFields() {
         return fields;
     }
